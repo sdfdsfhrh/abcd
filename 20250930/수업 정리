@@ -1,0 +1,151 @@
+# Matplotlib 수업 정리
+
+## 1. 기본 설정
+
+### 필수 라이브러리 임포트
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+### 한글 인코딩 설정
+```python
+#-* coding :utf-8 -*-
+```
+
+---
+
+## 2. 선 그래프 (Line Plot)
+
+### 기본 구조
+```python
+plt.plot([x좌표], [y좌표], linewidth=선굵기, c='색상', linestyle='선스타일')
+```
+
+### 주요 속성
+
+**선 스타일 (linestyle)**
+- `'-'` : 실선 (기본값)
+- `'--'` : 점선
+- `':'` : 점점선
+- `'-.'` : 일점쇄선
+
+**색상 (c 또는 color)**
+- `'r'` : 빨강
+- `'g'` : 초록
+- `'b'` : 파랑
+- `'k'` : 검정
+
+### 예제 코드
+```python
+plt.plot([1,2,3], [4,5,6], linewidth=1, c='g', linestyle='--')
+plt.plot([1,2,3], [1,4,9])  # 여러 선 그리기 가능
+```
+
+---
+
+## 3. 막대 그래프 (Bar Chart)
+
+### 기본 구조
+```python
+plt.bar(x좌표, y좌표, width=막대너비, color=색상리스트)
+```
+
+### 조건부 색상 적용
+```python
+y = [5, 3, 7, 10, 9, 5, 3.5, 8]
+x = range(len(y))
+colors = ['red' if val>7 else 'blue' for val in y]
+plt.bar(x, y, width=0.4, color=colors)
+```
+
+이 코드는 값이 7보다 크면 빨강, 작으면 파랑으로 표시합니다.
+
+---
+
+## 4. 그래프 꾸미기
+
+### 제목 설정 (Title)
+```python
+plt.title("Graph title", fontsize=20, fontweight='bold', loc='right', color='blue')
+```
+
+**속성**
+- `fontsize` : 글자 크기
+- `fontweight` : 글자 굵기 ('bold', 'normal')
+- `loc` : 위치 ('left', 'center', 'right')
+- `color` 또는 `c` : 색상
+
+### 축 레이블 (Axis Labels)
+```python
+plt.xlabel('Sequence', fontsize=12, fontweight='bold')
+plt.ylabel('Time(secs)', fontsize=12, fontweight='bold')
+```
+
+### 범례 (Legend)
+```python
+plt.legend(['Mouse', 'Cat'])
+```
+그래프를 그린 순서대로 이름이 매칭됩니다.
+
+### 축 범위 설정
+```python
+plt.xlim([0, 4])   # X축 범위: 0~4
+plt.ylim([0, 10])  # Y축 범위: 0~10
+```
+
+### 격자 (Grid)
+```python
+plt.grid()  # 기본 격자
+plt.grid(linestyle=':')  # 점선 격자
+```
+
+---
+
+## 5. 그래프 표시
+
+```python
+plt.show()
+```
+
+모든 설정이 끝나면 `plt.show()`를 호출하여 그래프를 화면에 표시합니다.
+
+---
+
+## 6. 전체 예제
+
+### 선 그래프 예제
+```python
+plt.title("Graph title", fontsize=20, fontweight='bold', loc='right', color='blue')
+plt.plot([1,2,3], [4,5,6], linewidth=1, c='g', linestyle='--')  
+plt.plot([1,2,3], [1,4,9])
+plt.grid(linestyle=':')
+plt.xlabel('Sequence', fontsize=12, fontweight='bold')
+plt.ylabel('Time(secs)', fontsize=12, fontweight='bold')
+plt.legend(['Mouse', 'Cat'])
+plt.xlim([0, 4])
+plt.ylim([0, 10])
+plt.show()
+```
+
+### 막대 그래프 예제
+```python
+y = [5, 3, 7, 10, 9, 5, 3.5, 8]
+x = range(len(y))
+colors = ['red' if val>7 else 'blue' for val in y]
+plt.bar(x, y, width=0.4, color=colors)
+plt.title("bar graph", fontsize='20', c='g', fontweight='bold')
+plt.xlabel('hi', fontsize=12, fontweight='bold')
+plt.ylabel('bye', fontsize=12, fontweight='bold')
+plt.show()
+```
+
+---
+
+## 정리
+
+오늘 배운 내용을 정리하면:
+1. **선 그래프**: 데이터의 추세를 보여줄 때 사용
+2. **막대 그래프**: 카테고리별 값을 비교할 때 사용
+3. **그래프 꾸미기**: 제목, 축 레이블, 범례, 격자 등으로 가독성 향상
+4. **조건부 스타일링**: 리스트 컴프리헨션으로 조건에 따라 다른 스타일 적용 가능
