@@ -1,0 +1,293 @@
+1) 산점도, 마커, 컬러맵, 버블 차트
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+x = np.random.randn(100)
+y = np.random.randn(100)
+sizes = (np.random.rand(100) * 300) + 20
+colors = np.sqrt(x**2 + y**2)
+
+plt.figure(figsize=(6,4), dpi=120)
+sc = plt.scatter(x, y, c=colors, s=sizes, cmap='viridis', alpha=0.7, marker='o', edgecolors='k', linewidths=0.5)
+plt.colorbar(sc, label='distance')
+plt.title('Scatter with colormap and sizes', fontsize=14, fontweight='bold')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.grid(linestyle=':')
+plt.tight_layout()
+plt.show()
+​
+2) 서브플롯과 레이아웃 제어
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 2*np.pi, 200)
+y1 = np.sin(x)
+y2 = np.cos(x)
+y3 = np.tan(x)
+y3[np.abs(y3) > 5] = np.nan  # 보기 편하게 클리핑
+
+fig, axs = plt.subplots(2, 2, figsize=(8,6), dpi=120)
+axs[0,0].plot(x, y1, c='b'); axs[0,0].set_title('sin')
+axs[0,1].plot(x, y2, c='g'); axs[0,1].set_title('cos')
+axs[1,0].plot(x, y3, c='r'); axs[1,0].set_title('tan (clipped)')
+axs[1,1].axis('off')  # 빈 칸
+
+for ax in axs.flat:
+    ax.grid(linestyle=':')
+
+fig.suptitle('Subplots example', fontsize=16, fontweight='bold')
+fig.tight_layout(rect=[0, 0, 1, 0.95])  # 상단 여백 확보
+plt.show()
+​
+3) 스타일과 전역 설정(rcParams)
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 스타일 프리셋 적용
+plt.style.use('ggplot')  # 'seaborn-v0_8', 'classic', 'bmh' 등도 가능
+
+# 전역 설정
+mpl.rcParams['figure.figsize'] = (6,4)
+mpl.rcParams['figure.dpi'] = 120
+mpl.rcParams['axes.titlesize'] = 14
+mpl.rcParams['axes.labelsize'] = 12
+
+x = np.linspace(0, 10, 200)
+plt.plot(x, np.sin(x), label='sin')
+plt.plot(x, np.cos(x), label='cos')
+plt.title('Global style with rcParams')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+​
+4) 한국어 폰트 설정과 음수 기호 깨짐 방지
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+
+# 시스템에 설치된 한글 폰트 예: 'AppleGothic'(mac), 'Malgun Gothic'(Windows), 'NanumGothic'(Linux)
+mpl.rcParams['font.family'] = 'Malgun Gothic'   # 환경에 맞게 변경
+mpl.rcParams['axes.unicode_minus'] = False      # 음수 기호 깨짐 방지
+
+x = np.arange(-3, 4)
+y = x**2
+plt.plot(x, y, marker='o')
+plt.title('한글 제목과 - 음수 표시 확인')
+plt.xlabel('X축')
+plt.ylabel('Y축')
+plt.grid(linestyle=':')
+plt.show()
+​
+5) 주석, 텍스트, 화살표
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 10, 200)
+y = np.sin(x)
+plt.plot(x, y)
+plt.title('Annotation example')
+
+# 텍스트와 화살표
+peak_x = np.pi/2
+peak_y = 1
+plt.scatter([peak_x], [peak_y], c='r')
+plt.annotate('최대값', xy=(peak_x, peak_y), xytext=(peak_x+1, peak_y-0.3),
+             arrowprops=dict(arrowstyle='->', color='red'),
+             fontsize=11, color='red')
+
+plt.grid(linestyle=':')
+plt.tight_layout()
+plt.show()
+​
+6) 두 축 공유와 쌍둥이 축(twinx)
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.arange(1, 13)
+sales = np.array([12, 15, 20, 25, 22, 30, 28, 27, 26, 24, 20, 18])
+growth = np.array([5, 7, 9, 10, 6, 12, 8, 7, 6, 5, 4, 3])
+
+fig, ax1 = plt.subplots(figsize=(7,4), dpi=120)
+ax2 = ax1.twinx()
+
+ax1.bar(x, sales, color='skyblue', width=0.6, label='매출')
+ax2.plot(x, growth, color='orange', marker='o', label='성장률')
+
+ax1.set_xlabel('월')
+ax1.set_ylabel('매출(억)')
+ax2.set_ylabel('성장률(%)')
+ax1.set_title('매출과 성장률(쌍둥이 축)')
+
+# 범례 병합
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
+
+ax1.grid(linestyle=':')
+plt.tight_layout()
+plt.show()
+​
+7) 히스토그램과 밀도, 상자그림
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(1)
+data = np.random.normal(loc=170, scale=7, size=500)
+
+plt.figure(figsize=(6,4), dpi=120)
+plt.hist(data, bins=20, color='mediumpurple', alpha=0.7, edgecolor='k', density=True)
+plt.title('Histogram with density')
+plt.xlabel('Height')
+plt.ylabel('Density')
+plt.grid(linestyle=':')
+
+# 상자그림
+plt.figure(figsize=(4,4), dpi=120)
+plt.boxplot(data, vert=True, patch_artist=True,
+            boxprops=dict(facecolor='lightgreen', color='k'))
+plt.title('Boxplot')
+plt.ylabel('Height')
+plt.grid(axis='y', linestyle=':')
+plt.tight_layout()
+plt.show()
+​
+8) 막대그래프: 그룹, 누적, 라벨
+import numpy as np
+import matplotlib.pyplot as plt
+
+labels = ['A','B','C','D']
+v1 = np.array([4, 7, 5, 6])
+v2 = np.array([3, 2, 4, 5])
+x = np.arange(len(labels))
+w = 0.35
+
+fig, ax = plt.subplots(1,2, figsize=(9,4), dpi=120)
+
+# 그룹 막대
+ax[0].bar(x - w/2, v1, width=w, label='올해')
+ax[0].bar(x + w/2, v2, width=w, label='작년')
+ax[0].set_xticks(x); ax[0].set_xticklabels(labels)
+ax[0].set_title('그룹 막대')
+ax[0].legend()
+ax[0].grid(axis='y', linestyle=':')
+
+# 누적 막대 + 라벨
+ax[1].bar(labels, v1, label='올해')
+ax[1].bar(labels, v2, bottom=v1, label='작년')
+for i, (a, b) in enumerate(zip(v1, v2)):
+    ax[1].text(i, a/2, str(a), ha='center', va='center', color='white')
+    ax[1].text(i, a + b/2, str(b), ha='center', va='center', color='white')
+
+ax[1].set_title('누적 막대')
+ax[1].legend()
+ax[1].grid(axis='y', linestyle=':')
+
+plt.tight_layout()
+plt.show()
+​
+9) 날짜와 시계열 포맷팅
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import matplotlib.dates as mdates
+
+rng = pd.date_range('2025-01-01', periods=30, freq='D')
+vals = np.cumsum(np.random.randn(30)) + 100
+
+fig, ax = plt.subplots(figsize=(7,4), dpi=120)
+ax.plot(rng, vals, marker='o')
+
+ax.set_title('Daily Series')
+ax.set_xlabel('Date')
+ax.set_ylabel('Value')
+
+# 날짜 포맷
+ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1))
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+fig.autofmt_xdate()
+
+ax.grid(linestyle=':')
+plt.tight_layout()
+plt.show()
+​
+10) 저장하기와 여백 조정
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 2*np.pi, 200)
+plt.plot(x, np.sin(x), label='sin')
+plt.title('Save figure example')
+plt.legend()
+plt.tight_layout()  # 자동 여백
+plt.savefig('figure_sin.png', dpi=200, bbox_inches='tight')  # 파일 저장
+plt.show()
+​
+11) 파이 차트 주의와 대안
+import matplotlib.pyplot as plt
+
+sizes = [40, 25, 20, 15]
+labels = ['A','B','C','D']
+explode = [0.05, 0, 0, 0]
+
+fig, ax = plt.subplots(figsize=(5,5), dpi=120)
+ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90,
+       explode=explode, shadow=True)
+ax.axis('equal')
+ax.set_title('Pie chart (use carefully)')  # 비교가 어려울 수 있음
+plt.show()
+​
+대안으로 막대 그래프나 누적 막대를 고려하세요. 정확한 비교에 더 유리합니다.
+12) 오류 막대와 신뢰구간 표현
+import numpy as np
+import matplotlib.pyplot as plt
+
+labels = ['A','B','C','D']
+means = np.array([5.2, 6.1, 4.8, 5.9])
+errors = np.array([0.4, 0.3, 0.5, 0.2])
+
+x = np.arange(len(labels))
+plt.figure(figsize=(6,4), dpi=120)
+plt.bar(x, means, yerr=errors, capsize=5, color='lightsteelblue', edgecolor='k')
+plt.xticks(x, labels)
+plt.title('Means with error bars')
+plt.xlabel('Group')
+plt.ylabel('Value')
+plt.grid(axis='y', linestyle=':')
+plt.tight_layout()
+plt.show()
+​
+13) 고급 라인 스타일과 대시 커스텀
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 10, 200)
+y1 = np.sin(x)
+y2 = np.cos(x)
+
+line1, = plt.plot(x, y1, color='royalblue', linewidth=2)
+line1.set_dashes([6, 2, 2, 2])  # 긴-공백-짧-공백 패턴
+
+plt.plot(x, y2, color='tomato', linewidth=2, linestyle='-.', marker='s', markevery=15)
+
+plt.title('Custom dashes and markers')
+plt.grid(linestyle=':')
+plt.tight_layout()
+plt.show()
+​
+14) 이미지로 저장하는 템플릿 스니펫
+import matplotlib.pyplot as plt
+
+def save_show(path='plot.png', dpi=200):
+    plt.tight_layout()
+    plt.savefig(path, dpi=dpi, bbox_inches='tight')
+    plt.show()
+
+# 사용 예:
+# ... 그리기 코드 ...
+# save_show('my_plot.png', dpi=300)
